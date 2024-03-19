@@ -1,3 +1,3 @@
 Task 1: ith quicksort working
-   After finding the ith order statistic using quickselect, the code performs a validation step to ensure correctness. It creates a copy of the original array and sorts it using the sort() method. It then compares the ith element of the sorted array with the ith order statistic obtained from quickselect.
+   In code after finding the ith order statistic using quickselect, it performs a validation step to validate correctness. Have created a copy of the original array and sorts it using the sort() method. Then compared the ith element of the sorted array with the ith order statistic obtained from quickselect.
    If both values match, code indicates that the ith order statistic was correctly identified.
