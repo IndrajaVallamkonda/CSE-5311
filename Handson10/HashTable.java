@@ -1,3 +1,4 @@
+import java.util.Scanner;
 class HashNode {
     int key;
     int value;
@@ -18,6 +19,9 @@ public class HashTable {
     private int capacity;
     private static final double increaseFactor = 0.75;
     private static final double decreaseFactor = 0.25;
+    private double hashFunctionDefault = (Math.sqrt(5) - 1) / 2;
+    private boolean isHashChanged = false;
+    private double hashChangedValue;
 
     public HashTable(int initialCapacity) {
         this.capacity = initialCapacity;
@@ -41,8 +45,24 @@ public class HashTable {
     }
 
     private int hash(int key) {
-        double A = (Math.sqrt(5) - 1) / 2; // Multiplication factor
+        double A;
+        if (isHashChanged){
+            A = hashChangedValue;
+        }
+        else{
+            A = hashFunctionDefault;
+        }
         return ((int) Math.floor(capacity * ((key * A) % 1)));
+    }
+
+    private void changeHashFunction(){
+      Scanner scanner = new Scanner(System.in);
+      System.out.println("Enter new double value for hash code:");
+      double hashValue = scanner.nextDouble();
+
+      isHashChanged = true;
+      hashChangedValue = hashValue;
+      resizeTable(capacity);
     }
 
     public void put(int key, int value) {
@@ -138,10 +158,11 @@ public class HashTable {
         table = newTable;
         if(oldCapacity > newCapacity){
             System.out.println("table got resized - decreased");
-        }else{
+        }else if (oldCapacity < newCapacity){
             System.out.println("table got resized - increased");
+        }else{
+            System.out.println("table got rehashed");
         }
-
     }
 
     public static void main(String[] args) {
@@ -153,8 +174,14 @@ public class HashTable {
         hashTable.put(66, 30);
         hashTable.put(33, 88);
         hashTable.put(45, 76);
+
+
         hashTable.put(54, 88);
         System.out.println("Value for key 33: " + hashTable.get(33));
+        hashTable.printTable();
+
+
+        hashTable.changeHashFunction();
         hashTable.printTable();
         hashTable.put(18, 81);
         hashTable.put(34, 59);
@@ -170,7 +197,6 @@ public class HashTable {
         hashTable.printTable();
     }
 }
-
 // Output:-
 // inserted key 5 into table 
 // inserted key 4 into table 
@@ -197,33 +223,51 @@ public class HashTable {
 // index :10-----
 // index :11-----
 
-// inserted key 18 into table 
-// inserted key 34 into table 
-// table got resized - increased
+// Enter new double value for hash code:
+// .55
+// table got rehashed
 
 // Printing hash table:
-// index :0----- -> 34
-// index :1-----
-// index :2----- -> 5 -> 18
-// index :3-----
+// index :0----- -> 11
+// index :1----- -> 33
+// index :2----- -> 4
+// index :3----- -> 66
 // index :4-----
 // index :5-----
 // index :6-----
 // index :7-----
 // index :8----- -> 54
-// index :9----- -> 33
+// index :9----- -> 5 -> 45
 // index :10-----
-// index :11----- -> 4
+// index :11-----
+
+// inserted key 18 into table 
+// inserted key 34 into table 
+// table got resized - increased
+
+// Printing hash table:
+// index :0-----
+// index :1----- -> 11
+// index :2-----
+// index :3----- -> 33
+// index :4----- -> 4
+// index :5-----
+// index :6-----
+// index :7----- -> 66
+// index :8-----
+// index :9-----
+// index :10-----
+// index :11-----
 // index :12-----
 // index :13-----
 // index :14-----
 // index :15-----
-// index :16-----
+// index :16----- -> 54 -> 34
 // index :17-----
-// index :18----- -> 66
-// index :19----- -> 11 -> 45
+// index :18----- -> 5 -> 45
+// index :19-----
 // index :20-----
-// index :21-----
+// index :21----- -> 18
 // index :22-----
 // index :23-----
 
@@ -239,9 +283,9 @@ public class HashTable {
 // table got resized - decreased
 
 // Printing hash table:
-// index :0----- -> 34 -> 18
-// index :1-----
-// index :2----- -> 33
+// index :0----- -> 33
+// index :1----- -> 66
+// index :2-----
 // index :3-----
-// index :4----- -> 66 -> 45
+// index :4----- -> 34 -> 45
 // index :5-----
